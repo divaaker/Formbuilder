@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Allow_Attachments__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>For check, Allow for Attachments</description>
+        <externalId>false</externalId>
+        <inlineHelpText>For check, Allow for Attachments</inlineHelpText>
+        <label>Allow_Attachments</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Allow_Comment__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Admin allows to user add a comment on the question.</description>
+        <externalId>false</externalId>
+        <label>Allow Comment</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Allow_Currency__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Admin can define whether its number or a currency, in case of currency, user should be able to choose the currency symbol.</description>
+        <externalId>false</externalId>
+        <label>Allow Currency</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Category__c</fullName>
+        <description>select Question Category type</description>
+        <externalId>false</externalId>
+        <label>Category</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetName>FB_Category</valueSetName>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Currency_Symbol__c</fullName>
+        <description>Admin can set currency on Question</description>
+        <externalId>false</externalId>
+        <label>Currency Symbol</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetName>Currency_Code</valueSetName>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Decimal_value__c</fullName>
+        <externalId>false</externalId>
+        <label>Decimal value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Default_Value__c</fullName>
+        <description>admin set Default Value for slider input</description>
+        <externalId>false</externalId>
+        <label>Default Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Help_Text_Required__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Allow admin to enter help text of question when checkbox checked.</description>
+        <externalId>false</externalId>
+        <label>Help Text Required</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Help_Text__c</fullName>
+        <description>Question Help Text</description>
+        <externalId>false</externalId>
+        <label>Help Text</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Is_Allow_Branching__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Admin can set question branches</description>
+        <externalId>false</externalId>
+        <label>Is Allow Branching</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Is_Approve_For_Library__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Check the question is approve or not for the library.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Check the question is approve or not for the library.</inlineHelpText>
+        <label>Is Approve For Library</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Is_Score_Required__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Show and hide score text field.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Show and hide score text field.</inlineHelpText>
+        <label>Is Score Required</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Is_Weight_Required__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Show and hide weight text field.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Show and hide weight text field.</inlineHelpText>
+        <label>Is Weight Required</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Label__c</fullName>
+        <description>Question label</description>
+        <externalId>false</externalId>
+        <label>Question Label</label>
+        <length>131000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Max_Char_Length__c</fullName>
+        <description>Admin can specify the max char length of the text associated with that question in a questionnaire.</description>
+        <externalId>false</externalId>
+        <label>Max Char Length</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Maximum_value__c</fullName>
+        <description>admin can set maximum value for slider</description>
+        <externalId>false</externalId>
+        <label>Maximum value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Metadata__c</fullName>
+        <externalId>false</externalId>
+        <label>Metadata</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Minimum_Value__c</fullName>
+        <externalId>false</externalId>
+        <label>Minimum Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>No_Of_Columns__c</fullName>
+        <description>Define which question related to particular column number.</description>
+        <externalId>false</externalId>
+        <label>No Of Columns</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>1</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>2</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>3</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>4</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Question_Library__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Lookup with Question Library</description>
+        <externalId>false</externalId>
+        <label>Question Library</label>
+        <referenceTo>Question_Library__c</referenceTo>
+        <relationshipLabel>Questions</relationshipLabel>
+        <relationshipName>Questions</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Related_To_Column__c</fullName>
+        <description>Define which question is related to particular column.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Define which question is related to particular column.</inlineHelpText>
+        <label>Related To Column</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Required__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>For check, question is required or not.</description>
+        <externalId>false</externalId>
+        <label>Required</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Step_Size__c</fullName>
+        <defaultValue>0</defaultValue>
+        <description>admin set step size for slider input</description>
+        <externalId>false</externalId>
+        <label>Step Size</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <description>Set a Question Type</description>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>TextPlain</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>RichText</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Address</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>GPSLocate</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Checkbox</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Number</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Email</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Phone</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>URL</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Information</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Date</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>DateTime</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>MultiSelect</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Lookup</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Signature</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Switch</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Slider</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>GPS Location</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Picklist</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Media</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Radio</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Header/Footer</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Weight__c</fullName>
+        <defaultValue>1</defaultValue>
+        <description>Define the weight of question.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Define the weight of question.</inlineHelpText>
+        <label>Weight</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>background_Color__c</fullName>
+        <description>Define the background color of information input .</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Define the background color of information input .</inlineHelpText>
+        <label>background_Color</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>is_Delete__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checked when question deleted .</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Checked when question deleted .</inlineHelpText>
+        <label>is Delete</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>lookup_Object_API_Name__c</fullName>
+        <description>Keep the object api name related to question.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Keep the object api name related to question.</inlineHelpText>
+        <label>lookup Object API Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>lookup_Object_Field_Name__c</fullName>
+        <description>Keep the object name related to question.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Keep the object name related to question.</inlineHelpText>
+        <label>lookup Object Field Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Question</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>Type__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>All1</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Question Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Questions</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

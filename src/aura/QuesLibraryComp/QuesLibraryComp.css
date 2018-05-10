@@ -1,0 +1,10 @@
+.THIS .libraryList dd .slds-form-element__label {
+    float: left;
+    width: 93%;
+    margin-right: 0;
+}
+
+.THIS .libraryList .slds-checkbox_faux{
+    float:left;
+    margin-right:5px;
+}

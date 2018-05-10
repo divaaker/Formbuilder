@@ -1,0 +1,111 @@
+<aura:component controller="UserFormInfoCtrl">
+	<!-- starting aura attribute -->
+		<aura:attribute name="statusPicklist" type="List"/>
+		<aura:attribute name="pMasterWrapperlist" type="List"/>
+	    <aura:attribute name="pWrapperlist" type="List"/>
+	    <aura:attribute name="pageSize" type="Integer" default="10"/>
+	    <aura:attribute name="masterlistSize" type="Integer"/>
+	    <aura:attribute name="startPosn" type="Integer" default="0"/>
+	    <aura:attribute name="endPosn" type="Integer"/>
+	    <aura:attribute type="String" name="sortField" />
+	    <aura:attribute name="isAsc" type="boolean" default="true" description="boolean flag for pass sorting condition to apex class"/> 
+	    <aura:attribute name="sortAsc" type="boolean"  />
+	<!-- end aura attribute -->
+	<!-- starting aura handler -->
+		<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<!-- end aura handler -->
+	<div class="slds-size_12-of-12 slds-brand-band_medium slds-template_default slds-m-bottom_none slds-p-bottom_none">
+            <div class="slds-panel  slds-grid slds-grid_vertical slds-nowrap slds-box slds-m-top_x-small ">
+                <div class="slds-form slds-form_stacked slds-grow ">
+                    <div class="slds-panel__section slds-p-top_none slds-p-buttom_none">
+                        <div class="slds-media">
+                            <div class="slds-media__body">
+                                <div class="slds-size_3-of-12 qf-width100 slds-m-left_x-small slds-m-top_x-small">
+                                        <span>
+                                            <lightning:select name="Status" label="" class="qf-removeLabel">
+                                                <option value="All" data-aura-rendered-by="740:0">All</option>
+                                                <aura:iteration items="{!v.statusPicklist}" var="statusVal">
+                                                	<option value="{!statusVal}" data-aura-rendered-by="740:0">{!statusVal}</option>
+                                                </aura:iteration>
+                                            </lightning:select>
+                                        </span>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-panel__section">
+                        <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                            <thead>
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Close Date">Form Title
+                                            <lightning:buttonIcon iconName="utility:arrowdown" variant="bare" alternativeText="Arrow down" class="slds-button__icon " />
+                                        </div>
+                                    </th>
+                                    <th scope="col" style="width: 20.25rem;">
+                                        <div class="slds-truncate" title="Account Name">Location
+                                            <lightning:buttonIcon iconName="utility:arrowdown" variant="bare" alternativeText="Arrow down" class="slds-button__icon " />
+                                        </div>
+                                    </th>
+                                    <th scope="col" style="width: 10.25rem;">
+                                        <div class="slds-truncate" title="Close Date">Assigned On
+                                            <lightning:buttonIcon iconName="utility:arrowdown" variant="bare" alternativeText="Arrow down" class="slds-button__icon " />
+                                        </div>
+                                    </th>
+                                    <th scope="col" style="width: 8.25rem;">
+                                        <div class="slds-truncate" title="Stage">Status
+                                            <lightning:buttonIcon iconName="utility:arrowdown" variant="bare" alternativeText="Arrow down" class="slds-button__icon " />
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.pWrapperlist}" var="form">
+	                                <tr class="slds-hint-parent">
+	                                    <th scope="row" data-label="Form Title">
+	                                        <div class="slds-truncate" title="Fall Protection Part 1 Checklist">
+	                                        	<a href="#">
+	                                        		{!form.Questionnaire__r.Name}
+	                                        	</a>
+	                                        </div>
+	                                    </th>
+	                                    <td data-label="Location">
+	                                        <div class="slds-truncate" title="6-STOO-Location Name">6-STOO-Location Name</div>
+	                                    </td>
+	                                    <td data-label="Assigned On">
+	                                    	<lightning:formattedDateTime value="{!form.Assigned_Date__c}" class="slds-truncate" title="{!form.Assigned_Date__c}" />
+	                                        <!--<div class="slds-truncate" title="{!form.Assigned_Date__c}"></div>-->
+	                                    </td>
+	                                    <td data-label="Status">
+	                                        <aura:if isTrue="{!form.status__c=='Inprogress'}">
+                                           		<div title="Inprogress"><span class="slds-badge bg-color-org">Inprogress</span></div>
+                                            </aura:if>
+	                                        <aura:if isTrue="{!form.status__c=='Incomplete'}">
+                                           		<div title="Incomplete"><span class="slds-badge bg-color-red">Incomplete</span></div>
+                                            </aura:if>
+                                            <aura:if isTrue="{!form.status__c=='Completed'}">
+                                           		<div title="Completed"><span class="slds-badge bg-color-green">Completed</span></div>
+                                            </aura:if>
+	                                    </td>
+	                                </tr>
+                            	</aura:iteration>                                
+                            </tbody>
+                        </table>
+                        <div class="slds-grid slds-gutters slds-m-top_x-small">
+                            <div class="slds-col">
+                                <span>
+                                	<lightning:button variant="brand" class="slds-float_left" label="Previous" disabled="{!v.startPosn == 0}" onclick="{!c.previous}" />
+                                </span>
+                            </div>
+                            <div class="slds-col slds-text-align_center slds-m-top_x-small">
+                                <span><b>Page : 1/1</b></span>
+                            </div>
+                            <div class="slds-col">
+                                <span> <lightning:button variant="brand" class="slds-float_right" label="Next" disabled="{!v.endPosn >= v.pMasterWrapperlist.length-1}" onclick="{!c.next}" /></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</aura:component>

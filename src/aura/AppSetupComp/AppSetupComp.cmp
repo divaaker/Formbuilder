@@ -1,0 +1,125 @@
+<aura:component controller="AppSetupController" implements="force:appHostable">
+	
+	<!--attribute-->
+	<aura:attribute name="templateList" type="list" default="[]" description="list of Questionnaire__c custom object"/>
+	<aura:attribute name="sectionList" type="list" default="[]" description="list of Question_Group__c custom object"/>
+	<aura:attribute name="selectedTemplate" type="string" default=""/>
+	<aura:attribute name="selectedSection" type="string" default=""/>
+	<aura:attribute name="isOpenSectionColorModal" type="boolean" default="false"/>
+	<aura:attribute name="isShowSpinner" type="boolean" default="false"/>
+	
+	<!-- button attributes-->
+	<!--submit button-->
+	<aura:attribute name="buttonTextColor" type="string" default="#FFFFFF"/>
+	<aura:attribute name="buttonBGColor" type="string" default="#2196F3"/>
+	<aura:attribute name="buttonBorderColor" type="string" default="#2196F3"/>
+
+	<!--Next button-->
+	<aura:attribute name="buttonNextTextColor" type="string" default="#FFFFFF"/>
+	<aura:attribute name="buttonNextBGColor" type="string" default="#2196F3"/>
+	<aura:attribute name="buttonNextBorderColor" type="string" default="#2196F3"/>
+
+	<!--Previous button-->
+	<aura:attribute name="buttonPreviousTextColor" type="string" default="#FFFFFF"/>
+	<aura:attribute name="buttonPreviousBGColor" type="string" default="#2196F3"/>
+	<aura:attribute name="buttonPreviousBorderColor" type="string" default="#2196F3"/>
+
+	<aura:attribute name="buttonNextLabel" type="string" default="Next"/>
+	<aura:attribute name="buttonPrevLabel" type="string" default="Previous"/>
+	<aura:attribute name="buttonSubmitLabel" type="string" default="Submit"/>
+
+	<!-- Event-->
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<aura:if isTrue="{!v.isShowSpinner}">
+		<lightning:spinner variant="brand" size="medium"/>
+	</aura:if>
+
+	<lightning:card class="fb-page-header">
+        <aura:set attribute="title">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="standard:custom" title="App setup" />
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-p-right_x-small">
+                        <span class="slds-grid slds-has-flexi-truncate slds-grid_vertical-align-center">
+                            <span class="slds-truncate" title="Setup">Setup</span>
+                        </span>
+                    </h1>
+                    <nav class="slds-text-heading_small">
+                        Setup your section button label,allignment and colors 
+                    </nav>
+                </div>
+            </div>
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:buttonGroup >
+                <lightning:button label="Map Answer Object" value="" onclick="{!c.mapAnswerToObjectFields}" />
+                <lightning:button label="Section Button" onclick="{!c.colorSetupButton}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+    </lightning:card>
+
+    <lightning:card title="Map Template List">
+        <lightning:layout multipleRows="true" horizontalAlign="space">
+        	<lightning:layoutItem size="6">
+
+        	</lightning:layoutItem>
+    	</lightning:layout>
+	</lightning:card>
+
+	<!-- button design-->
+	<aura:if isTrue="{!v.isOpenSectionColorModal}">
+		<div class="modal-container hideModalCSS" aura:id="datecmodalontainer">
+	        <section role="dialog" id="text-plain-popup" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_large slds-fade-in-open slds-slide-down-cancel">
+	            <div class="slds-modal__container">
+	                <header class="slds-modal__header">
+	                    <lightning:buttonIcon iconName="utility:close" onclick="{!c.hideModal}" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" />
+	                    <h3 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><strong>Section Button</strong></h3>
+	                </header>
+	                
+	                <div class="slds-modal__content slds-p-around_medium " id="modal-content-id-1" style="height:420px">	                    
+	                    <lightning:layout multipleRows="true" verticalAlign="center">
+	                    	<lightning:layoutItem size="6" padding="around-small">
+	                         	<lightning:combobox aura:id="templateList" name="templatename" label="Select Form Template" 
+				                    placeholder="Choose Template" 
+				                    value="{!v.selectedTemplate}" 
+				                    onchange="{!c.templateChange}" 
+				                    options="{!v.templateList}"/>
+			                </lightning:layoutItem>
+			                <lightning:layoutItem size="6" padding="around-small">
+	                            <lightning:combobox aura:id="sectionList" class="slds-m-top_x-small" name="templatename" label="Select Section" 
+				                    placeholder="Choose Section" 
+				                    value="{!v.selectedSection}" 
+				                    onchange="{!c.sectionChange}" 
+				                    options="{!v.sectionList}"/>
+	                        </lightning:layoutItem>
+	                        
+	                         <lightning:layoutItem size="3" padding="around-small">
+	                         	<lightning:input type="text" value="{!v.buttonSubmitLabel}" label="Submit Button Label"/>
+	                         </lightning:layoutItem>
+	                         <lightning:layoutItem size="3" padding="around-small">
+	                         	<lightning:input type="text" value="{!v.buttonBorderColor}" label="Submit Button Border Color"/>
+	                         	<c:FBColorPicker colorCode="{!v.buttonBorderColor}" attrToReflect="buttonBorderColor"/>
+	                         </lightning:layoutItem>
+	                         <lightning:layoutItem size="3" padding="around-small">
+	                         	<lightning:input type="text" value="{!v.buttonBGColor}" label="Submit Button Background Color"/>
+	                         	<c:FBColorPicker colorCode="{!v.buttonBGColor}" attrToReflect="buttonBGColor"/>
+	                         </lightning:layoutItem>
+	                         <lightning:layoutItem size="3" padding="around-small">
+	                         	<lightning:input type="text" value="{!v.buttonTextColor}" label="Submit Button Text Color"/>
+	                         	<c:FBColorPicker colorCode="{!v.buttonTextColor}" attrToReflect="buttonTextColor"/>
+	                         </lightning:layoutItem>
+	                    </lightning:layout>
+	                </div>
+	                <footer class="slds-modal__footer">
+	                    <lightning:button label="Cancel" onclick="{!c.hideModal}" />
+	                    <lightning:button variant="brand" label="Save" onclick="{!c.hideModal}" />
+	                </footer>
+	            </div>
+	        </section>
+	        <div class="slds-backdrop  slds-backdrop_open" id="slds-backdrop"></div>
+	    </div>
+	</aura:if>
+</aura:component>

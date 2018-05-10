@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Question Response</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Question Response</value>
+    </caseValues>
+    <fields>
+        <label><!-- Answer --></label>
+        <name>Answer__c</name>
+    </fields>
+    <fields>
+        <label><!-- Comment --></label>
+        <name>Comment__c</name>
+    </fields>
+    <fields>
+        <label><!-- Question Questionnaire --></label>
+        <name>Question_Questionnaire__c</name>
+        <relationshipLabel><!-- Question Response --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Question --></label>
+        <name>Question__c</name>
+        <relationshipLabel><!-- Question Response --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Questionnaire Form --></label>
+        <name>Questionnaire_Form__c</name>
+        <relationshipLabel><!-- Question Response --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Questionnaire --></label>
+        <name>Questionnaire__c</name>
+        <relationshipLabel><!-- Question Response --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Score --></label>
+        <name>Score__c</name>
+    </fields>
+    <fields>
+        <label><!-- User --></label>
+        <name>User__c</name>
+        <relationshipLabel><!-- Question Response --></relationshipLabel>
+    </fields>
+    <layouts>
+        <layout>Question Response Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

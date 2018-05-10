@@ -1,0 +1,142 @@
+<aura:component controller="InformationInputCtr">
+    <!-- Start attribute -->
+    <aura:attribute name="QnaireId" type="String" />
+    <aura:attribute name="QnaireName" type="String" />
+    <aura:attribute name="QuestnQnaireId" type="String" />
+    <aura:attribute name="QuestnGroupId" type="String" />
+    <aura:attribute name="Questntype" type="String" />
+    <aura:attribute name="isEditQue" type="Boolean" />
+    <aura:attribute name="modalHeader" type="String" />
+    <aura:attribute name="fieldType" type="String" />
+    <aura:attribute name="dropColNumber" type="String" />
+    <aura:attribute name="isShowHelpText" type="Boolean" default="false" />
+    <aura:attribute name="lstQuesCategory" type="List" default="[]" />
+    <aura:attribute name="objCrteQues" type="Question__c" default="{'sobjectType': 'Question__c'}" />
+    <aura:attribute name="description" type="String" default=" " />
+    <aura:attribute name="objeditQues" type="Question__c" default="{ 'sobjectType': 'Question__c'}" />
+    <aura:attribute name="lstColorCodes" type="List" default="[]" />
+    <aura:attribute name="colorCode" type="String" default="#5679C0" />
+    <aura:attribute name="bgcolor" type="String" default="background: rgb(87, 123, 193)" />
+    <!-- End attribute-->
+    <!-- event handlers -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"></aura:handler>
+    <!-- event handlers -->
+    <!--Start body-->
+    <div class="modal-container hideModalCSS" aura:id="datecmodalontainer">
+        <section role="dialog" id="text-plain-popup" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_large slds-fade-in-open slds-slide-down-cancel">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close" onclick="{!c.hideModal}" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" />
+                    <h3 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate ">
+                        <strong>Question Editor : {!v.modalHeader}</strong>
+                    </h3>
+                </header>
+                <aura:if isTrue="{!v.isEditQue==false}">
+                    <div class="slds-modal__content slds-p-around_medium " id="modal-content-id-1">
+                        <fieldset class="slds-form-element" style="min-width: 100%;">
+                            
+                            <div class="slds-form-element ">
+                                <label class="slds-form-element__label" for="select-01">Question Text</label>
+                                <div class="demo-only" >
+                                    <lightning:inputRichText onblur="{!c.checkTextLength}" messageWhenBadInput="write your question" aura:id="qustNameRich" placeholder="Compose text..." value="{!v.description}" />
+                                </div>
+                            </div>
+                            <div class="slds-form-element slds-m-top_small">
+                                <div class="slds-color-picker">
+                                    <div class="slds-color-picker__summary">
+                                        <label class="slds-color-picker__summary-label" for="color-picker-summary-input">Choose Color</label>
+                                        <button class="slds-button slds-color-picker__summary-button slds-button_icon slds-button_icon-more" onclick="{!c.showColorModal}" aura:id="articleOne">
+                                            <span class="slds-swatch" style="{!v.bgcolor}">
+                                                <span class="slds-assistive-text">hsl(220, 46%, 55%)</span>
+                                            </span>
+                                            <lightning:Icon iconName="utility:down" />
+                                            <span class="slds-assistive-text">Choose a color. Current color: #5679C0</span>
+                                        </button>
+                                        <div class="slds-form-element slds-color-picker__summary-input">
+                                            <div class="slds-form-element__control">
+                                                <input type="text" id="color-picker-summary-input" class="slds-input" placeholder="Placeholder Text" value="{!v.colorCode}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <section class="slds-popover slds-color-picker__selector slds-hide" role="dialog" aria-label="Choose a color" aria-describedby="dialog-body-id-44" aura:id="articleOne">
+                                        <div class="slds-popover__body" id="dialog-body-id-44">
+                                            <ul class="slds-color-picker__swatches" role="listbox">
+                                                <aura:iteration items="{!v.lstColorCodes}" var="code" indexVar="index">
+                                                    <li class="slds-color-picker__swatch" role="presentation">
+                                                        <lightning:button variant="brand" label="Submit" onclick="{! c.getColorCode }" value="{!code.value}" name="{!code.name}">
+                                                            <span class="slds-swatch" style="{!code.name}">
+                                                                <span class="slds-assistive-text">{!code.value}</span>
+                                                            </span>
+                                                        </lightning:button>
+                                                    </li>
+                                                </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.isEditQue==true}">
+                    <div class="slds-modal__content slds-p-around_medium " id="modal-content-id-1">
+                        <fieldset class="slds-form-element" style="min-width: 100%;">
+                            
+                            <div class="slds-form-element ">
+                                <label class="slds-form-element__label" for="select-01">Question Text</label>
+                                <div class="demo-only" >
+                                    <lightning:inputRichText disabledCategories="" aura:id="qustNameRich" placeholder="Compose text..." value="{!v.description}" />
+                                </div>
+                            </div>
+                            <div class="slds-form-element slds-m-top_small">
+                                <div class="slds-color-picker">
+                                    <div class="slds-color-picker__summary">
+                                        <label class="slds-color-picker__summary-label" for="color-picker-summary-input">Choose Color</label>
+                                        <button class="slds-button slds-color-picker__summary-button slds-button_icon slds-button_icon-more" onclick="{!c.showColorModal}" aura:id="articleOne">
+                                            <span class="slds-swatch" style="{!'background-color:'+v.objeditQues.GKN_FB__Metadata__c}">
+                                                <span class="slds-assistive-text">hsl(220, 46%, 55%)</span>
+                                            </span>
+                                            <lightning:Icon iconName="utility:down" />
+                                            <span class="slds-assistive-text">Choose a color. Current color: #5679C0</span>
+                                        </button>
+                                        <div class="slds-form-element slds-color-picker__summary-input">
+                                            <div class="slds-form-element__control">
+                                                <input type="text" id="color-picker-summary-input" class="slds-input" placeholder="Placeholder Text" value="{!v.objeditQues.GKN_FB__Metadata__c}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <section class="slds-popover slds-color-picker__selector slds-hide" role="dialog" aria-label="Choose a color" aria-describedby="dialog-body-id-44" aura:id="articleOne">
+                                        <div class="slds-popover__body" id="dialog-body-id-44">
+                                            <ul class="slds-color-picker__swatches" role="listbox">
+                                                <aura:iteration items="{!v.lstColorCodes}" var="code" indexVar="index">
+                                                    <li class="slds-color-picker__swatch" role="presentation">
+                                                        <lightning:button variant="brand" label="Submit" onclick="{! c.getColorCode }" value="{!code.value}" name="{!code.name}">
+                                                            <span class="slds-swatch" style="{!code.name}">
+                                                                <span class="slds-assistive-text">{!code.value}</span>
+                                                            </span>
+                                                        </lightning:button>
+                                                    </li>
+                                                </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </aura:if>
+                <footer class="slds-modal__footer">
+                    <lightning:button label="Cancel" onclick="{!c.hideModal}" />
+                    <aura:if isTrue="{!v.isEditQue==false}">
+                        <lightning:button variant="brand" label="Save" onclick="{!c.saveQues}" />
+                    </aura:if>
+                    <aura:if isTrue="{!v.isEditQue==true}">
+                        <lightning:button variant="brand" label="Save" onclick="{!c.saveEditQuesrecord}" />
+                    </aura:if>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop  slds-backdrop_open" id="slds-backdrop"></div>
+    </div>
+    <!--end body-->
+</aura:component>

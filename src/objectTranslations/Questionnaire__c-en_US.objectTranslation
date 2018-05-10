@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Questionnaire</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Questionnaires</value>
+    </caseValues>
+    <fields>
+        <label><!-- Allow Download Copy --></label>
+        <name>Allow_download_copy__c</name>
+    </fields>
+    <fields>
+        <label><!-- Binding Object --></label>
+        <name>Binding_Object__c</name>
+    </fields>
+    <fields>
+        <label><!-- Category --></label>
+        <name>Category__c</name>
+    </fields>
+    <fields>
+        <label><!-- Community URL --></label>
+        <name>Community_URL__c</name>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Name --></label>
+        <name>Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Publish --></label>
+        <name>Publish__c</name>
+    </fields>
+    <fields>
+        <label><!-- Send Copy --></label>
+        <name>Send_Copy__c</name>
+    </fields>
+    <fields>
+        <label><!-- Questionnaire --></label>
+        <name>Template__c</name>
+        <relationshipLabel><!-- Questionnaires --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Version --></label>
+        <name>Version__c</name>
+    </fields>
+    <fields>
+        <label><!-- isMerge --></label>
+        <name>isMerge__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check whether template has been published or not --></help>
+        <label><!-- is Published --></label>
+        <name>is_Published__c</name>
+    </fields>
+    <layouts>
+        <layout>Questionnaire Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- Add_Questions --></label>
+        <name>Add_Questions</name>
+    </webLinks>
+</CustomObjectTranslation>

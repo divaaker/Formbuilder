@@ -1,0 +1,518 @@
+<aura:component controller="PreviewCtrl" implements="forceCommunity:availableForAllPageTypes" access="global">
+
+    <!--<ltng:require scripts="{!join(',', $Resource.Ltng_QFTemplateCSS + '/Ltng_QFTemplate/assets/jquery/jquery-3.0.0.js', 
+        $Resource.Ltng_QFTemplateCSS + '/Ltng_QFTemplate/assets/jquery/jquery-ui-1.12.1.js')}" afterScriptsLoaded="{!c.scriptsLoaded}" />-->
+    <!-- Start attribute -->
+    <aura:attribute name="richTextCharLimit" type="Integer" default="0" />    
+    <aura:attribute name="QnaireId" type="String" default=""/>
+    <aura:attribute name="className1" type="String" default="" />    
+    <aura:attribute name="QnaireName" type="String" />
+    <aura:attribute name="objQnaire" type="Object" default="{ 'sobjectType': 'Questionnaire__c'}" />
+    <aura:attribute name="lstQuesCategory" type="List" />
+    <aura:attribute name="selTabId" type="String" />
+    <aura:attribute name="lstQuesGroup" type="list" default="[]"/>
+    <aura:attribute name="lstQQuesnnaire" type="QuestionGroupWithQuestionsWrap"/>
+    <aura:attribute name="objQues" type="Object" default="{ 'sobjectType': 'Question__c'}" />
+    <aura:attribute name="objCrteQues" type="Object" default="{ 'sobjectType': 'Question__c'}" />
+    <aura:attribute name="dropColNumber" type="String" default=""/>
+    <aura:attribute name="description" type="String" default="" />
+    <aura:attribute name="isShowDateModal" type="Boolean" default="false" />
+    <aura:attribute name="dragId" type="String" default="" />
+    <aura:attribute name="isShowModal" type="Boolean" default="false" />
+    <aura:attribute name="isShowSection" type="Boolean" default="false" />
+    <aura:attribute name="isShowHelpText" type="Boolean" default="false" />
+    <aura:attribute name="modalHeader" type="String" default=" " />
+    <aura:attribute name="isEditQue" type="boolean" default="false" />
+    <aura:attribute name="emailValue" type="String" default="" />
+    <aura:attribute name="alertMsg" type="String" default="" />
+    <aura:attribute name="selColumnNo" type="String" default=""/>
+    <aura:attribute name="isShowURLModal" type="Boolean" default="false" />
+    <aura:attribute name="isShowDatetimeModal" type="Boolean" default="false" />
+    <aura:attribute name="richTextVal" type="String" default=" " />
+    <aura:attribute name="url" type="String" default=""/>
+    <aura:attribute name="openDeleteModal" type="Boolean" default="false" />
+    <aura:attribute name="deleteModal" type="Boolean" default="false" />
+    <aura:attribute name="questionDeleteModal" type="Boolean" default="false" />
+    <aura:attribute name="deleteModalContent" type="String" default=""/>
+    <aura:attribute name="deleteQuestionId" type="String" default=""/>
+    <aura:attribute name="qstnOptions" type="list" default="[]"/>
+    <aura:attribute name="openBranchingModal" type="Boolean" default="false" />
+    <aura:attribute name="showSign" type="Boolean" default="false" />
+    <aura:attribute name="questnLfPanel" type="String" default="" />
+    <aura:attribute name="questnLfPanelStyleValue" type="String" default="" />
+    <aura:attribute name="questionBuilderleftbox" type="String" default="" />
+    <aura:attribute name="latitude" type="String" default="" />
+    <aura:attribute name="longitude" type="String" default="" />
+    <aura:attribute name="responseList" type="list" default="[]" description="Response list of object{qid,resid,restext,isComment}"/>
+    <aura:attribute name="nextBtn" type="boolean" default="true" />
+    <aura:attribute name="prevBtn" type="boolean" default="false" />
+
+    <aura:attribute name="ShowBtn" type="boolean" default="false" />
+    <aura:attribute name="Spinner" type="boolean" default="false" />
+    <!-- End attribute -->
+    
+    <!-- event handlers -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:handler event="c:QFFieldModelCloseEvt" action="{!c.handleCloseModelEvent}"/>
+    <aura:handler event="c:QFDeleteModalEvt" action="{!c.handleDeleteModelEvent}"/>  
+    <!--<aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>-->
+    <!-- event handlers -->
+    
+    
+    <!--<aura:registerEvent name="setActiveHeaderComp" type="c:QFSetActiveHeaderEvt" />-->
+    <aura:if isTrue="{!v.Spinner}">
+        <lightning:spinner aura:id="spinnerId" variant="brand" size="small"/>
+    </aura:if>
+    
+    <lightning:card aura:id="templateHeader">
+        <aura:set attribute="title">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <lightning:icon iconName="standard:template" title="Search Questionnaire Template" />
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-p-right_x-small">
+                        <button class="slds-button slds-button_reset slds-type-focus slds-truncate" aria-haspopup="true" title="">
+                            <span class="slds-grid slds-has-flexi-truncate slds-grid_vertical-align-center">
+                                <span class="slds-truncate" title="Recently Viewed">{!v.objQnaire.Name}</span>
+                            </span>
+                        </button>
+                    </h1>
+                    <nav class="slds-text-heading_small">
+                        {!v.objQnaire.GKN_FB__Description__c}
+                    </nav>
+                </div>
+            </div>
+        </aura:set>
+         <aura:set attribute="actions">           
+             <div>Version :{!v.objQnaire.GKN_FB__Version__c} &nbsp;&nbsp; Category :{!v.objQnaire.GKN_FB__Category__c}</div>
+             
+        </aura:set>
+    </lightning:card>
+    
+    <lightning:card class="qstnBuilderContent qf-card-remove">
+        <div class="slds-size_12-of-12">
+            <div class="slds-grid">
+                <aura:if isTrue="{!v.alertMsg != ''}">
+                    <c:ShowAlertMessage message="{!v.alertMsg}" />
+                </aura:if>
+                <div class="slds-col slds-size_8-of-12 border0 paddingL0 slds-p-top_none slds-p-bottom_none">
+                    
+                    <div class="slds-panel slds-p-top_none slds-grid slds-grid_vertical slds-nowrap slds-m-top_x-small">
+                        <div class="slds-form slds-form_stacked slds-grow ">                            
+                            {!v.lstQuesGroup}
+                            <div class="slds-panel__section  slds-p-bottom_none slds-p-left_none slds-p-right_none qf-section-name">
+                                <div class="slds-media__body">
+                                    <div class="slds-grid">
+                                        <div class="slds-col ">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <aura:if isTrue="{!v.lstQQuesnnaire.sectionColNumber !='0'}">
+                                                        <h1><span class="slds-text-heading_small slds-card__header-link"> {!v.lstQQuesnnaire.groupName} </span></h1>
+                                                    </aura:if>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>         
+                            {!v.lstQQuesnnaire.lstQuestn}
+                            <div class="slds-panel__section slds-show slds-p-around_none dropSection" aura:id="column0" id="col0" style="{!(v.lstQQuesnnaire.sectionColNumber == '0' || v.lstQQuesnnaire.sectionColNumber == '1' )? 'display:block;' : 'display:none;'}">
+                                <div class="slds-scrollable slds-grow questionBuilder slds-is-relative sortableArea">
+                                    <aura:iteration items="{!v.lstQQuesnnaire.lstQuestn}" var="Question">
+                                        <aura:iteration items="{!Question.GKN_FB__Question_Questionnaires__r}" var="QuestionQuestnnaire">
+                                            <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Related_To_Column__c =='col0'}">
+                                                <div class="slds-panel slds-p-top_none qf-box slds-p-left_none slds-p-right_none slds-p-bottom_none slds-grid slds-grid_vertical slds-nowrap  slds-m-top_x-small">
+                                                    <div class="slds-form slds-form_stacked slds-grow ">
+                                                        <div class="{!Question.GKN_FB__Type__c == 'Information' ? 'slds-panel__section qf-information-section' : 'slds-panel__section slds-p-bottom_none'}" Style="{!Question.GKN_FB__Type__c == 'Information' ? 'background:'+ Question.GKN_FB__Metadata__c+' ; border-radius: 5xp;' : ''}">
+                                                            <div class="slds-media__body">
+                                                                <div class="slds-grid">
+                                                                    <div class="slds-col ">
+                                                                        <div class="slds-form-element">
+                                                                            <div class="slds-form-element__control">
+                                                                                <h2>
+                                                                                    <span class="qf-text slds-is-relative">
+                                                                                        <div class="slds-grid  slds-wrap">
+                                                                                            <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Required__c==true}">
+                                                                                                <span id="asteric">&#42;</span>
+                                                                                            </aura:if>
+                                                                                            <div class="slds-col " style="max-width:95%;">
+                                                                                                <aura:unescapedHtml value="{!Question.GKN_FB__Label__c}"  />
+                                                                                                <lightning:helptext iconName="utility:info"  content="{!QuestionQuestnnaire.GKN_FB__Help_Text__c}" class="{!QuestionQuestnnaire.GKN_FB__Help_Text_Required__c==false?'hidehelptextIcon':'helptextIcon'}" />
+                                                                                            </div>
+                                                                                            
+                                                                                        </div>  
+                                                                                    </span>
+                                                                                </h2>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <aura:if isTrue="{!Question.GKN_FB__Type__c !='Information'}">
+                                                            <div class="slds-panel__section">
+                                                                <div class="slds-grow questionBuilder slds-is-relative">
+                                                                    <fieldset class="slds-form-element">
+                                                                        <div class="slds-form-element__control slds-clearfix">
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='TextPlain'}">
+                                                                                <lightning:input aura:id="inputFields" name="{!'name_'+Question.Id}" maxlength="{!QuestionQuestnnaire.GKN_FB__Max_Char_Length__c}" minlength="0" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" onblur="{!c.onBlurEvent}"/>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="{!'comment_'+Question.Id}" maxlength="255" minlength="0"  onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c ==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">          
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Email'}">
+                                                                                <lightning:input aura:id="inputFields" variant="label-hidden" type="email" name="{!'name_'+Question.Id}"  pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" messageWhenPatternMismatch="Enter valid email address format." maxlength="255" minlength="0" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" onblur="{!c.onBlurEvent}"/>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="{!'comment_'+Question.Id}" maxlength="255" minlength="0" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Address'}">
+                                                                                <lightning:textarea aura:id="inputFields" name="{!'name_'+Question.Id}" placeholder="Address" label="" maxlength="300" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" onblur="{!c.onBlurEvent}"/>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="{!'comment_'+Question.Id}" class="" maxlength="255" minlength="0"  onchange="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Phone'}">
+                                                                                
+                                                                                <lightning:input aura:id="inputFields" type="Tel" label=" " name="{!'name_'+Question.Id}" maxlength="40" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" onblur="{!c.onBlurEvent}"/>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="{!'comment_'+Question.Id}" class="" maxlength="255" minlength="0" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Date'}">                          
+                                                                                <ui:inputDate aura:id="dateId" select="{!c.nullify}" keyup="{!c.nullify}" keypress="{!c.nullify}" updateOn="keypress, keyup" label=" " class="form-control datepick " displayDatePicker="true" value="" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" labelClass="{!'name_'+Question.Id}" change="{!c.handleDateTypeField}"/>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" class="marginT5" maxlength="255" minlength="0" name="{!'comment_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='URL'}">
+                                                                                <lightning:input aura:id="inputFields" type="url" label="" name="{!'name_'+Question.Id}" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" onblur="{!c.onBlurEvent}"/>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="{!'comment_'+Question.Id}" class="" maxlength="255" minlength="0" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='DateTime'}">
+                                                                                
+                                                                                <ui:inputDatetime aura:id="datetimeId" select="{!c.nullifyDate}" keyup="{!c.nullifyDate}" keypress="{!c.nullifyDate}" updateOn="change" label=" " class="form-control datetimepick" displayDatePicker="true" value="" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" labelClass="{!'name_'+Question.Id}" change="{!c.handleDateTypeField}"/>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" class="marginT5" maxlength="255" minlength="0" name="{!'comment_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='RichText'}">
+                                                                                <div data-value="{!QuestionQuestnnaire.GKN_FB__Max_Char_Length__c}" onclick="{!c.getCharLimit}">
+                                                                                    <lightning:inputRichText class="inputRichText" onblur="{!c.checkTextLenght}" value="" placeholder="Compose text..." variant="label-hidden"/>
+                                                                                    
+                                                                                </div>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" class="" maxlength="255" minlength="0" name="{!'comment_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Number'}">
+                                                                                <div class="{!Question.GKN_FB__Allow_Currency__c==true?'slds-form-element__control slds-input-has-icon slds-input-has-icon_left marginB5':'slds-form-element__control marginB5'}">
+                                                                                    <aura:if isTrue="{!Question.GKN_FB__Allow_Currency__c==true}">
+                                                                                        <span style="z-index:100; top:17px;" class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default">
+                                                                                            {!Question.GKN_FB__Currency_Symbol__c}
+                                                                                        </span>
+                                                                                    </aura:if>
+                                                                                    <aura:if isTrue="{!Question.GKN_FB__Decimal_value__c==0}">
+                                                                                        <lightning:input aura:id="inputFields" label="" maxlength="18" min="0" messageWhenBadInput="Please enter valid format value" messageWhenPatternMismatch="Please enter valid format in number and not accept decimal point" messageWhenValueMissing="Please enter the currency" messageWhenTooLong="18 char limit" messageWhenRangeOverflow="18 char limit" value="0" pattern="^[0-9]*$" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" name="{!'name_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                    </aura:if>
+                                                                                    <aura:if isTrue="{!Question.GKN_FB__Decimal_value__c==1}">
+                                                                                        <lightning:input aura:id="inputFields" maxlength="18" min="0" label="" messageWhenBadInput="Please enter valid format value" messageWhenPatternMismatch="Please enter valid format in number and accept only 1 decimal point" messageWhenValueMissing="Please enter the currency" messageWhenTooLong="18 char limit" messageWhenRangeOverflow="18 char limit" value="0.0" pattern="^(?!0\d|$)\d*(\.\d{1,1})?$" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" name="{!'name_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                    </aura:if>
+                                                                                    <aura:if isTrue="{!Question.GKN_FB__Decimal_value__c==2}">
+                                                                                        <lightning:input aura:id="inputFields" label="" maxlength="18" min="0" messageWhenBadInput="Please enter valid format value" messageWhenPatternMismatch="Please enter valid format in number and accept only 2 decimal point" messageWhenValueMissing="Please enter the currency" messageWhenTooLong="18 char limit" messageWhenRangeOverflow="18 char limit" value="0.00" pattern="^(?!0\d|$)\d*(\.\d{1,2})?$" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" name="{!'name_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                    </aura:if>
+                                                                                    <aura:if isTrue="{!Question.GKN_FB__Decimal_value__c==3}">
+                                                                                        <lightning:input aura:id="inputFields" maxlength="18" min="0" label="" messageWhenBadInput="Please enter valid format value" messageWhenPatternMismatch="Please enter valid format in number and accept only 3 decimal point" messageWhenValueMissing="Please enter the currency" messageWhenTooLong="18 char limit" messageWhenRangeOverflow="18 char limit" value="0.00" pattern="^(?!0\d|$)\d*(\.\d{1,3})?$" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" name="{!'name_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                    </aura:if>
+                                                                                    <aura:if isTrue="{!Question.GKN_FB__Decimal_value__c==4}">
+                                                                                        <lightning:input aura:id="inputFields" label="" maxlength="18" min="0" messageWhenBadInput="Please enter valid format value" messageWhenPatternMismatch="Please enter valid format in number and accept only 4 decimal point" messageWhenValueMissing="Please enter the currency" messageWhenTooLong="18 char limit" messageWhenRangeOverflow="18 char limit" value="0.0000" pattern="^(?!0\d|$)\d*(\.\d{1,4})?$" variant="label-hidden" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" name="{!'name_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                    </aura:if>
+                                                                                </div>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" class="" maxlength="255" minlength="0" required="{!QuestionQuestnnaire.GKN_FB__Required__c}" name="{!'comment_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Checkbox'}">
+                                                                                <div class="selection_isrequired" data-required_property="{!QuestionQuestnnaire.GKN_FB__Required__c}">
+                                                                                <aura:iteration items="{!Question.GKN_FB__Question_Options__r}" var="QustnOptions" indexVar="index">
+                                                                                    <lightning:input type="checkbox" label="{!QustnOptions.GKN_FB__Name__c}" name="rbtInput" value="{!QustnOptions.GKN_FB__Name__c}" />
+                                                                                </aura:iteration>
+                                                                                </div>
+
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" class="" maxlength="255" minlength="0"  name="{!'comment_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Radio'}">
+                                                                                <div class="selection_isrequired" data-required_property="{!QuestionQuestnnaire.GKN_FB__Required__c}">
+                                                                                <aura:iteration items="{!Question.GKN_FB__Question_Options__r}" var="QustnOptions" indexVar="index">
+                                                                                    <lightning:input type="radio" label="{!QustnOptions.GKN_FB__Name__c}" name="rbtInput" value="{!QustnOptions.GKN_FB__Name__c}" />
+                                                                                </aura:iteration>
+                                                                                </div>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" class="" maxlength="255" minlength="0"  name="{!'comment_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Picklist'}">
+                                                                                <lightning:select name="{!'name_'+Question.Id}" onchange="{!c.onBlurEvent}" label="" required="{!QuestionQuestnnaire.GKN_FB__Required__c}">
+                                                                                    <option value="">choose one...</option>
+                                                                                    <aura:iteration items="{!Question.GKN_FB__Question_Options__r}" var="QustnOptionsSelect" indexVar="index">
+                                                                                        <option value="{!QustnOptionsSelect.Id}">{!QustnOptionsSelect.GKN_FB__Name__c}</option>
+                                                                                    </aura:iteration>
+                                                                                </lightning:select>
+                                                                               
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" class="" maxlength="255" minlength="0" name="{!'comment_'+Question.Id}" onblur="{!c.onBlurEvent}"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='MultiSelect'}">
+                                                                                <c:MultiSelectUIComp options_="{!Question.GKN_FB__Question_Options__r}" />
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="myname" class="" maxlength="255" minlength="0" />
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Lookup'}">
+                                                                                <c:LookupComp sobjectName="{!QuestionQuestnnaire.GKN_FB__lookup_Object_API_Name__c}" field_API_Name="{!QuestionQuestnnaire.GKN_FB__lookup_Object_Field_Name__c}" field_ID="Id" />
+                                                                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="myname" class="" maxlength="255" minlength="0" />
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Signature'}">
+                                                                                <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                    <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                        <lightning:button label="Sign" onclick="{!c.showSignModel}" class="slds-float_right" />
+                                                                                    </div>
+                                                                                </div>
+                                                                                
+                                                                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="myname" class="" maxlength="255" minlength="0" />
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Switch'}">
+                                                                                <div class="demo-only slds-size_1-of-2">
+                                                                                    <div class="slds-form-element">
+                                                                                        <label class="slds-checkbox_toggle slds-grid">
+                                                                                            <span class="slds-form-element__label slds-m-bottom_none"></span>
+                                                                                            <input type="checkbox" name="checkbox" aria-describedby="toggle-desc" value="on" />
+                                                                                            <span id="toggle-desc" class="slds-checkbox_faux_container"  style="width: 150px;" aria-live="assertive">
+                                                                                                <span class="slds-checkbox_faux" style="width: 100%;"></span>
+                                                                                                <span class="slds-checkbox_on">{!Question.GKN_FB__Question_Options__r[0].Name__c}</span>
+                                                                                                <span class="slds-checkbox_off" style="float: right">{!Question.Question_Options__r[1].Name__c}</span>
+                                                                                            </span>
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="myname" class="" maxlength="255" minlength="0" />
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='Slider'}">
+                                                                                <lightning:slider max="{!QuestionQuestnnaire.GKN_FB__Maximum_value__c}" min="{!QuestionQuestnnaire.GKN_FB__Minimum_Value__c}" step="{!QuestionQuestnnaire.GKN_FB__Step_Size__c}" value="{!QuestionQuestnnaire.GKN_FB__Default_Value__c}" />
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}">
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="myname" class="" maxlength="255" minlength="0" />
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                            
+                                                                            <aura:if isTrue="{!Question.GKN_FB__Type__c=='GPS Location'}">
+                                                                                
+                                                                                <lightning:inputLocation label="" latitude="37.7938460" longitude=" -122.3948370" onfocus="{!c.getCurrentLocation}"/>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Comment__c==true}" >
+                                                                                    <lightning:input aura:id="inputFields" label=" Comment" name="myname" class="" maxlength="255" minlength="0" />
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!QuestionQuestnnaire.GKN_FB__Allow_Attachments__c==true}">
+                                                                                    <div class="slds-file-selector slds-file-selector_files slds-clearfix slds-m-top_small">
+                                                                                        <div class="slds-file-selector__dropzone qf-hide-label">
+                                                                                            <lightning:fileUpload label=" " recordId="{!v.QnaireId}" class="slds-file-selector slds-file-selector_files slds-clearfix " multiple="false" accept=".docx,.pdf,.ppt,.pptx,.xls,.xlsx,.gif,.jpg,.png" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </aura:if>
+                                                                            </aura:if>
+                                                                        </div>
+                                                                    </fieldset>
+                                                                </div>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                        </aura:iteration>
+                                    </aura:iteration>
+                                </div>
+                            </div>                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </lightning:card>
+    <aura:if isTrue="{!v.showSign==true}">
+        <c:SignatureUIComp />
+    </aura:if>
+    
+	<lightning:card aura:id="templateSection">      	
+			<div class="slds-scrollable slds-grow questionBuilder ">
+				<div class="slds-grid">
+                    <aura:if isTrue="{!v.prevBtn==true}">
+    					<div class="slds-col ">
+    						<lightning:button label="Previous Section" onclick="{!c.tabPrevious}" class="slds-float_left" variant="neutral"/>
+    					</div>
+					</aura:if>
+                    <aura:if isTrue="{!v.nextBtn==true}">
+                        <div class="slds-col">
+                            <lightning:button label="Next Section" onclick="{!c.tabNext}" class="slds-float_right" variant="neutral"/>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.nextBtn==false}">
+                        <div class="slds-col">
+                            <lightning:button label="Submit" onclick="{!c.tabNext}" class="slds-float_right" variant="brand"/>
+                        </div>
+                    </aura:if>
+				</div>
+			</div>       
+    </lightning:card>
+    <!--</aura:if>-->
+    <!--End container section -->
+</aura:component>

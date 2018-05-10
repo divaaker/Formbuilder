@@ -1,0 +1,5 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="footerContent" type="String" default=""/>
+    
+    <lightning:inputRichText value="{!v.footerContent}" />
+</aura:component>

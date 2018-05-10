@@ -11,8 +11,5 @@
         "verbose": false,
         "ignoreWarnings": true
     },
-    "username": "formbuilder@girikon.com",
-    "password": "changepass1",
-    "url": "https://login.salesforce.com",
-    "autoCompile": true
+   
 }

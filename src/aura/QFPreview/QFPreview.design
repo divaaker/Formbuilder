@@ -1,3 +1,0 @@
-<design:component label="Template Preview New">
-	<design:attribute name="recordId" label="Form Id"/><!--datasource="apex://DynamicPicklist"-->
-</design:component>

@@ -1,3 +1,0 @@
-<design:component label="Footer">
-    <!--<design:attribute name="footerContent" type="String" default=""/>-->
-</design:component>
